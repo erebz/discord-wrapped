@@ -1,0 +1,1 @@
+ALTER TABLE `metric_buckets` ADD `is_animated` integer DEFAULT false NOT NULL;
