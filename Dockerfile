@@ -1,8 +1,7 @@
-# Build stage
+# Stage 1: Build the TypeScript application
 FROM node:20-slim AS builder
 WORKDIR /app
 
-# Install build dependencies for better-sqlite3
 RUN apt-get update && apt-get install -y \
     python3 \
     make \
@@ -15,11 +14,10 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# Production stage
-FROM node:20-slim
+# Stage 2: Install production dependencies only
+FROM node:20-slim AS prod-deps
 WORKDIR /app
 
-# Install build dependencies for better-sqlite3 (needed for npm install)
 RUN apt-get update && apt-get install -y \
     python3 \
     make \
@@ -29,8 +27,14 @@ RUN apt-get update && apt-get install -y \
 COPY package*.json ./
 RUN npm ci --omit=dev
 
+# Stage 3: Final production image
+FROM node:20-slim
+WORKDIR /app
+
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/drizzle ./drizzle
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY package*.json ./
 
 # Create data directory for SQLite
 RUN mkdir -p /app/data
