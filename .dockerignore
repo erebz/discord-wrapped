@@ -1,0 +1,15 @@
+node_modules
+dist
+data
+*.db
+*.db-shm
+*.db-wal
+.env
+.git
+.github
+Dockerfile
+.dockerignore
+src/__tests__
+vitest.config.ts
+check_db.ts
+inspect_emojis.ts
