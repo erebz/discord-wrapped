@@ -21,6 +21,36 @@ interface WrappedCardProps {
 export const WrappedCard: React.FC<WrappedCardProps> = ({ data, title, subtitle }) => {
   const maxMessages = data.topUsers.length > 0 ? data.topUsers[0].count : 1;
 
+  // Simple SVG icons
+  const Icons = {
+    Messages: (
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5865F2" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    ),
+    Members: (
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5865F2" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    ),
+    Reactions: (
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5865F2" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+        <line x1="9" y1="9" x2="9.01" y2="9"/>
+        <line x1="15" y1="9" x2="15.01" y2="9"/>
+      </svg>
+    ),
+    TopEmoji: (
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#5865F2" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+    ),
+  };
+
   return (
     <div
       style={{
@@ -49,10 +79,10 @@ export const WrappedCard: React.FC<WrappedCardProps> = ({ data, title, subtitle 
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
           <SectionTitle>Server Snapshot</SectionTitle>
           <div style={{ display: 'flex', flexWrap: 'wrap', margin: '-10px' }}>
-            <Stat label="Total Messages" value={data.totalMessages.toLocaleString()} icon="💬" />
-            <Stat label="Active Members" value={data.activeMembers.toLocaleString()} icon="👥" />
-            <Stat label="Total Reactions" value={data.totalReactions.toLocaleString()} icon="🎭" />
-            <Stat label="Top Emoji" value={data.topEmoji?.name || 'N/A'} icon="✨" />
+            <Stat label="Total Messages" value={data.totalMessages.toLocaleString()} icon={Icons.Messages} />
+            <Stat label="Active Members" value={data.activeMembers.toLocaleString()} icon={Icons.Members} />
+            <Stat label="Total Reactions" value={data.totalReactions.toLocaleString()} icon={Icons.Reactions} />
+            <Stat label="Top Emoji" value={data.topEmoji?.name || 'N/A'} icon={Icons.TopEmoji} />
           </div>
           
           <div style={{ display: 'flex', marginTop: '20px', gap: '20px' }}>
