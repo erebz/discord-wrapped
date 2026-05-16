@@ -9,17 +9,33 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({ children }) => {
     <div
       style={{
         display: 'flex',
-        fontSize: '24px',
-        fontWeight: 'bold',
-        color: '#FFFFFF',
+        flexDirection: 'column',
+        width: '100%',
         marginBottom: '20px',
         marginTop: '10px',
-        borderBottom: '2px solid rgba(255, 255, 255, 0.1)',
-        paddingBottom: '8px',
-        width: '100%',
       }}
     >
-      {children}
+      <div
+        style={{
+          display: 'flex',
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: '#FFFFFF',
+          paddingBottom: '8px',
+          textTransform: 'uppercase',
+          letterSpacing: '1px',
+        }}
+      >
+        {children}
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          width: '100%',
+          height: '2px',
+          backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        }}
+      />
     </div>
   );
 };

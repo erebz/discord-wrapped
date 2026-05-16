@@ -15,8 +15,8 @@ export const Stat: React.FC<StatProps> = ({ label, value, icon }) => {
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
         padding: '20px',
         borderRadius: '16px',
-        width: '280px',
-        margin: '10px',
+        width: '330px',
+        height: '140px',
       }}
     >
       <div style={{ display: 'flex', fontSize: '18px', color: '#B9BBBE', marginBottom: '8px' }}>
