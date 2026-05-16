@@ -52,7 +52,7 @@ export async function renderWrappedImage(
     <WrappedCard data={data} title={title} subtitle={subtitle} />,
     {
       width: 1200,
-      height: 630,
+      height: 700,
       fonts: [
         {
           name: 'Inter',
