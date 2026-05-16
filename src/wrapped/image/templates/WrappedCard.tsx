@@ -16,7 +16,6 @@ interface WrappedCardProps {
  * IMPORTANT satori constraints:
  * - ONLY flexbox layout works. No grid, no float, no position absolute except with parent relative.
  * - Every element with multiple children MUST have `display: flex`.
- * - Tailwind classes work via the `tailwindConfig` option, but plain inline styles are simpler — use inline styles.
  */
 export const WrappedCard: React.FC<WrappedCardProps> = ({ data, title, subtitle }) => {
   const maxMessages = data.topUsers.length > 0 ? data.topUsers[0].count : 1;
@@ -64,24 +63,25 @@ export const WrappedCard: React.FC<WrappedCardProps> = ({ data, title, subtitle 
         display: 'flex',
         flexDirection: 'column',
         width: '1200px',
-        height: '700px',
+        height: '820px',
         background: 'linear-gradient(135deg, #23272A 0%, #2C2F33 100%)',
         padding: '40px',
         color: '#FFFFFF',
         fontFamily: 'Inter',
       }}
     >
-      {/* Header */}
-      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '30px' }}>
-        <div style={{ display: 'flex', fontSize: '64px', fontWeight: 'bold', letterSpacing: '-2px' }}>
+      {/* Header: Fixed Height ~120px */}
+      <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '40px', height: '120px' }}>
+        <div style={{ display: 'flex', fontSize: '64px', fontWeight: 'bold', letterSpacing: '-2px', lineHeight: 1 }}>
           {title}
         </div>
-        <div style={{ display: 'flex', fontSize: '24px', color: '#5865F2', fontWeight: 'bold' }}>
+        <div style={{ display: 'flex', fontSize: '24px', color: '#5865F2', fontWeight: 'bold', marginTop: '10px' }}>
           {subtitle}
         </div>
       </div>
 
-      <div style={{ display: 'flex', flex: 1, gap: '40px' }}>
+      {/* Body: Fixed Height 520px */}
+      <div style={{ display: 'flex', gap: '40px', height: '520px', marginBottom: '40px' }}>
         {/* Left Column: Stats Grid */}
         <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
           <SectionTitle>Server Snapshot</SectionTitle>
@@ -93,11 +93,11 @@ export const WrappedCard: React.FC<WrappedCardProps> = ({ data, title, subtitle 
           </div>
           
           <div style={{ display: 'flex', marginTop: '20px', gap: '20px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(88, 101, 242, 0.2)', padding: '20px', borderRadius: '16px', flex: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(88, 101, 242, 0.2)', padding: '20px', borderRadius: '16px', flex: 1, height: '140px' }}>
               <div style={{ display: 'flex', fontSize: '14px', color: '#B9BBBE', marginBottom: '4px' }}>Busiest Day</div>
               <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold' }}>{data.busiestDay || 'N/A'}</div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(88, 101, 242, 0.2)', padding: '20px', borderRadius: '16px', flex: 1 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(88, 101, 242, 0.2)', padding: '20px', borderRadius: '16px', flex: 1, height: '140px' }}>
               <div style={{ display: 'flex', fontSize: '14px', color: '#B9BBBE', marginBottom: '4px' }}>Peak Hour</div>
               <div style={{ display: 'flex', fontSize: '24px', fontWeight: 'bold' }}>{data.peakHour !== null ? `${data.peakHour}:00` : 'N/A'}</div>
             </div>
@@ -107,12 +107,12 @@ export const WrappedCard: React.FC<WrappedCardProps> = ({ data, title, subtitle 
         {/* Right Column: Top Users */}
         <div style={{ display: 'flex', flexDirection: 'column', width: '400px' }}>
           <SectionTitle>Most Active Members</SectionTitle>
-          <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '30px', borderRadius: '24px', flex: 1 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '30px', borderRadius: '24px', height: '460px' }}>
             {data.topUsers.length > 0 ? (
               data.topUsers.map((user, index) => (
                 <BarRow 
                   key={user.userId} 
-                  label={`User ${index + 1}`} // We don't have usernames here, normally we'd fetch them or pass them
+                  label={`User ${index + 1}`}
                   value={user.count} 
                   max={maxMessages}
                   color={index === 0 ? '#5865F2' : index === 1 ? '#43B581' : '#FAA61A'}
@@ -129,13 +129,13 @@ export const WrappedCard: React.FC<WrappedCardProps> = ({ data, title, subtitle 
         </div>
       </div>
 
-      {/* Footer */}
-      <div style={{ display: 'flex', marginTop: '60px', justifyContent: 'space-between', alignItems: 'center' }}>
+      {/* Footer: Fixed Height 40px */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '40px' }}>
         <div style={{ display: 'flex', color: '#B9BBBE', fontSize: '16px' }}>
           Generated with Discord Wrapped
         </div>
-        <div style={{ display: 'flex', backgroundColor: '#5865F2', padding: '8px 16px', borderRadius: '20px', fontSize: '14px', fontWeight: 'bold' }}>
-          SPOTIFY STYLE
+        <div style={{ display: 'flex', backgroundColor: '#5865F2', padding: '8px 24px', borderRadius: '20px', fontSize: '16px', fontWeight: 'bold' }}>
+          /wrapped
         </div>
       </div>
     </div>
