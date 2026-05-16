@@ -78,7 +78,20 @@ src/
     buildWeeklyWrapped.ts
     buildMonthlyWrapped.ts
     wrappedQueries.ts
-    renderWrappedEmbed.ts
+    renderWrappedEmbed.ts      // Smart renderer (image + fallback)
+    renderWrappedEmbedText.ts  // Original text-only renderer
+    image/
+      loadFonts.ts
+      renderWrappedImage.ts
+      templates/
+        WrappedCard.tsx
+        components/
+          Stat.tsx
+          BarRow.tsx
+          SectionTitle.tsx
+      fonts/
+        Inter-Regular.ttf
+        Inter-Bold.ttf
 
   utils/
     dates.ts
@@ -189,6 +202,20 @@ DISCORD_TOKEN=
 DATABASE_URL=file:./data/app.db
 METRICS_FLUSH_INTERVAL_MS=10000
 ```
+
+---
+
+## Customizing the wrapped card
+
+The generated image is built using JSX templates, which makes it easy to restyle without touching complex canvas APIs.
+
+- **Templates**: Located in `src/wrapped/image/templates/`. The main card is `WrappedCard.tsx`.
+- **Components**: Reusable UI pieces like `Stat.tsx` and `BarRow.tsx` are in `src/wrapped/image/templates/components/`.
+- **Styling**: We use inline styles with standard CSS properties. Note that Satori only supports **Flexbox** layout.
+- **Fonts**: Inter Regular and Bold are loaded from `src/wrapped/image/fonts/`. If you change fonts, update `loadFonts.ts`.
+- **Pipeline**: `renderWrappedImage.ts` handles the conversion from JSX -> SVG (Satori) -> PNG (Resvg).
+
+To change colors or spacing, simply edit the inline styles in `WrappedCard.tsx` or its components.
 
 ---
 
