@@ -5,9 +5,10 @@ import { runMigrations } from "./db/connection";
 import { metricsTracker } from "./metrics/MetricsTracker";
 import { buildWeeklyWrapped } from "./wrapped/buildWeeklyWrapped";
 import { buildMonthlyWrapped } from "./wrapped/buildMonthlyWrapped";
-import { renderWrappedEmbed } from "./wrapped/renderWrappedEmbed";
+import { renderWrappedResponse } from "./wrapped/renderWrappedEmbed";
 import { env } from "./config/env";
 import { logger } from "./utils/logger";
+import { getCurrentWeekRange, getCurrentMonthRange, formatDateRange } from "./utils/dates";
 
 async function main() {
   // 1. Database
@@ -38,13 +39,17 @@ async function main() {
 
     try {
       if (subcommand === "weekly") {
+        const { start, end } = getCurrentWeekRange();
         const data = await buildWeeklyWrapped(interaction.guildId);
-        const embed = renderWrappedEmbed("📊 Weekly Wrapped", data);
-        await interaction.editReply({ embeds: [embed] });
+        const subtitle = formatDateRange(start, end);
+        const response = await renderWrappedResponse("📊 Weekly Wrapped", subtitle, data);
+        await interaction.editReply(response);
       } else if (subcommand === "monthly") {
+        const { start, end } = getCurrentMonthRange();
         const data = await buildMonthlyWrapped(interaction.guildId);
-        const embed = renderWrappedEmbed("📊 Monthly Wrapped", data);
-        await interaction.editReply({ embeds: [embed] });
+        const subtitle = formatDateRange(start, end);
+        const response = await renderWrappedResponse("📊 Monthly Wrapped", subtitle, data);
+        await interaction.editReply(response);
       }
     } catch (err) {
       logger.error("Failed to build wrapped", { error: String(err) });

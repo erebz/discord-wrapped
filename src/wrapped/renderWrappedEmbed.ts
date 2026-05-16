@@ -1,66 +1,45 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, AttachmentBuilder } from "discord.js";
 import { WrappedData } from "./wrappedQueries";
+import { renderWrappedImage } from "./image/renderWrappedImage";
+import { renderWrappedEmbed as renderTextEmbed } from "./renderWrappedEmbedText";
+import { logger } from "../utils/logger";
 
-function formatNumber(n: number): string {
-  return n.toLocaleString("en-US");
+interface WrappedResponse {
+  embeds: EmbedBuilder[];
+  files: AttachmentBuilder[];
 }
 
-function formatPeakHour(hour: number | null): string {
-  if (hour === null) return "N/A";
-  return `${String(hour).padStart(2, "0")}:00`;
-}
-
-function formatChannel(channelId: string | null): string {
-  if (!channelId) return "N/A";
-  return `<#${channelId}>`;
-}
-
-function formatMember(userId: string | null): string {
-  if (!userId) return "N/A";
-  return `<@${userId}>`;
-}
-
-function formatEmoji(emoji: { name: string; id: string | null; isAnimated: boolean } | null): string {
-  if (!emoji || !emoji.name) return "N/A";
-  if (emoji.id) {
-    const prefix = emoji.isAnimated ? "a" : "";
-    return `<${prefix}:${emoji.name}:${emoji.id}> **${emoji.name}**`;
-  }
-  // Standard Unicode emoji
-  return `${emoji.name} **${emoji.name}**`;
-}
-
-export function renderWrappedEmbed(
+/**
+ * Attempts to render a Wrapped response with a generated image.
+ * Falls back to a text-only embed if image generation fails.
+ */
+export async function renderWrappedResponse(
   title: string,
+  subtitle: string,
   data: WrappedData
-): EmbedBuilder {
-  const topUsersList = data.topUsers.length > 0
-    ? data.topUsers
-        .map(
-          (u, i) =>
-            `${i + 1}. ${formatMember(u.userId)} — **${formatNumber(u.count)}**`
-        )
-        .join("\n")
-    : "No data available";
+): Promise<WrappedResponse> {
+  try {
+    const imageBuffer = await renderWrappedImage(data, title, subtitle);
+    const file = new AttachmentBuilder(imageBuffer, { name: "wrapped.png" });
+    
+    const embed = new EmbedBuilder()
+      .setTitle(title)
+      .setImage("attachment://wrapped.png")
+      .setColor(0x5865F2)
+      .setFooter({ text: subtitle })
+      .setTimestamp();
 
-  const description = [
-    `📨 **${formatNumber(data.totalMessages)}** messages sent`,
-    `👥 **${formatNumber(data.activeMembers)}** active members`,
-    `💬 Top channel: ${formatChannel(data.topChannel)}`,
-    `📅 Busiest day: **${data.busiestDay ?? "N/A"}**`,
-    `⏰ Peak hour: **${formatPeakHour(data.peakHour)}**`,
-    ``,
-    `🥇 **Top 3 Active Members**`,
-    topUsersList,
-    ``,
-    `⚡ **${formatNumber(data.totalReactions)}** reactions added`,
-    `🏆 Top emoji: ${formatEmoji(data.topEmoji)}`,
-    `🔥 Most reactive member: ${formatMember(data.mostReactiveMember)}`,
-  ].join("\n");
-
-  return new EmbedBuilder()
-    .setTitle(title)
-    .setDescription(description)
-    .setColor(0x5865f2) // Discord blurple
-    .setTimestamp();
+    return {
+      embeds: [embed],
+      files: [file],
+    };
+  } catch (error) {
+    logger.error("Failed to render wrapped image, falling back to text", { error: String(error) });
+    
+    const textEmbed = renderTextEmbed(title, data);
+    return {
+      embeds: [textEmbed],
+      files: [],
+    };
+  }
 }

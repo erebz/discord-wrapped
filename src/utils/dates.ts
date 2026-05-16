@@ -52,3 +52,20 @@ export function getCurrentMonthRange(): { start: Date; end: Date } {
 export function getUTCDayName(date: Date): string {
   return date.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" });
 }
+
+/**
+ * Formats a date range as a string (e.g. "May 10 - May 17, 2026").
+ */
+export function formatDateRange(start: Date, end: Date): string {
+  const options: Intl.DateTimeFormatOptions = {
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  };
+  const startStr = start.toLocaleDateString("en-US", options);
+  const endStr = end.toLocaleDateString("en-US", {
+    ...options,
+    year: "numeric",
+  });
+  return `${startStr} - ${endStr}`;
+}
