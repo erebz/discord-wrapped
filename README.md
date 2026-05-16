@@ -82,7 +82,7 @@ src/
     renderWrappedEmbedText.ts  // Original text-only renderer
     image/
       loadFonts.ts
-      renderWrappedImage.ts
+      renderWrappedImage.tsx
       templates/
         WrappedCard.tsx
         components/
@@ -213,7 +213,7 @@ The generated image is built using JSX templates, which makes it easy to restyle
 - **Components**: Reusable UI pieces like `Stat.tsx` and `BarRow.tsx` are in `src/wrapped/image/templates/components/`.
 - **Styling**: We use inline styles with standard CSS properties. Note that Satori only supports **Flexbox** layout.
 - **Fonts**: Inter Regular and Bold are loaded from `src/wrapped/image/fonts/`. If you change fonts, update `loadFonts.ts`.
-- **Pipeline**: `renderWrappedImage.ts` handles the conversion from JSX -> SVG (Satori) -> PNG (Resvg).
+- **Pipeline**: `renderWrappedImage.tsx` handles the conversion from JSX -> SVG (Satori) -> PNG (Resvg).
 
 To change colors or spacing, simply edit the inline styles in `WrappedCard.tsx` or its components.
 
